@@ -104,6 +104,7 @@ export const login = (email, password) =>
     } else if (email && email in users) {
       if (users[email].password === password) {
         users[email].sessionActive = true;
+
         resolve(jwt.sign({ email }, JWT_SECRET, { algorithm: 'HS256' }));
       }
     }

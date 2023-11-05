@@ -1,0 +1,9 @@
+{
+    "cSpell.words": [
+        "Airbrb",
+        "antd",
+        "Unpublish"
+    ],
+    "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+    "typescript.format.insertSpaceBeforeFunctionParenthesis": true
+}
