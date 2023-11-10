@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { AuthResponse, UserRegisterForm } from '../../types/user';
 import apiReq from '../../utils/apiReq';
-import { useNavigate, Link as _Link, LinkProps } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useGlobalComponents } from '../../context/GlobalComponentsContext/GlobalComponentsContext';
 import { useUser } from '../../context/UserContext/UserContext';
 import { CommonContentWrapper, sm } from '../../styles/GlobalStyle';

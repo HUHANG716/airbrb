@@ -68,6 +68,7 @@ const HeaderMenu = () => {
       menu={{ items: userInfo ? itemsAuth : itemsUnAuth }}
       trigger={['click']}>
       <Button
+        aria-label='menu trigger'
         shape='round'
         type='primary'>
         <MenuOutlined />

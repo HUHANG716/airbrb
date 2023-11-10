@@ -36,6 +36,7 @@ const PublishedDropdown = () => {
       content={Content}
       trigger={['click']}>
       <ResponsiveText
+        role='button'
         tabIndex={0}
         onKeyDown={(e) => handleEnter(e, () => setOpen(true))}>
         {isAvailable ? 'View Available' : 'Publish'}

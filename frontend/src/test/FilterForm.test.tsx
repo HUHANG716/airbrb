@@ -3,36 +3,29 @@ import { ShallowWrapper, shallow } from 'enzyme';
 import { DatePicker, Select, Slider } from 'antd';
 import FilterForm from '../components/Layout/components/FilterForm';
 
-import * as SearchContext from '../context/SearchContext/SearchContext'; // Import the module
 import { Range } from '../types/global';
-
-// Mock the module with jest.mock
-jest.mock('../context/SearchContext/SearchContext', () => {
-  // Create a mock setSearchParams function
-  const setSearchParamsMock = jest.fn();
-  // Return the original module mixed with the mocked hook
-  return {
-    ...jest.requireActual('../context/SearchContext/SearchContext'),
-    useSearch: () => ({
-      searchParams: {
-        numBedroomsRange: [0, 10],
-        priceRange: [0, 2000],
-        dateRange: ['', ''],
-        sortByRating: 'Default',
-      },
-      setSearchParams: setSearchParamsMock,
-    }),
-  };
-});
+import dayjs from '../utils/dayjs';
+import { SearchParams } from '../context/SearchContext/SearchContext';
 
 describe('FilterForm', () => {
   let wrapper: ShallowWrapper;
-  const { useSearch } = SearchContext;
-  const setSearchParamsMock = useSearch().setSearchParams;
+  const searchParamsMock: SearchParams = {
+    searchContent: '',
+    numBedroomsRange: [0, 10],
+    priceRange: [0, 2000],
+    dateRange: ['', ''],
+    sortByRating: 'Default',
+  };
+  const setSearchParamsMock = jest.fn();
 
   beforeEach(() => {
     // Use mount to render FilterForm
-    wrapper = shallow(<FilterForm />);
+    wrapper = shallow(
+      <FilterForm
+        searchParams={searchParamsMock}
+        setSearchParams={setSearchParamsMock}
+      />
+    );
   });
 
   it('renders properly', () => {
@@ -67,7 +60,37 @@ describe('FilterForm', () => {
     expect(setSearchParamsMock).toHaveBeenNthCalledWith(1, expect.objectContaining({ dateRange: [START, ''] }));
     expect(setSearchParamsMock).toHaveBeenNthCalledWith(2, expect.objectContaining({ dateRange: ['', END] }));
   });
-
+  it('should correctly display the date', () => {
+    const [start, end] = ['09/11/2024', '10/11/2024'];
+    wrapper = shallow(
+      <FilterForm
+        searchParams={{
+          ...searchParamsMock,
+          dateRange: [start, end],
+        }}
+        setSearchParams={setSearchParamsMock}
+      />
+    );
+    expect(wrapper.find(DatePicker).at(0).props().value).toEqual(dayjs(start));
+    expect(wrapper.find(DatePicker).at(1).props().value).toEqual(dayjs(end));
+  });
+  it('has no value', () => {
+    wrapper = shallow(
+      <FilterForm
+        searchParams={{
+          searchContent: '',
+          numBedroomsRange: [0, 10],
+          priceRange: [0, 2000],
+          dateRange: ['', ''],
+          sortByRating: 'Default',
+        }}
+        setSearchParams={setSearchParamsMock}
+      />
+    );
+    const startDatePicker = wrapper.find(DatePicker).at(0);
+    expect(startDatePicker.props().value).toBe(undefined);
+    expect(wrapper.find(DatePicker).at(1).props().value).toBe(undefined);
+  });
   it('calls setSearchParams with correct value when sort by changes', () => {
     const sortBySelect = wrapper.find(Select).at(0);
     const NEW_VALUE = 'HIGH TO LOW';

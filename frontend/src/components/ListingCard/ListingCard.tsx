@@ -66,8 +66,8 @@ const ListingCard = ({ listing, className = '', viewer = 'common', coverStyle, o
       <ResponsiveText
         key={'0'}
         role='link'
-        onClick={() => nav(`/listing/${id}`)}
-        onKeyDown={(e) => handleEnter(e, () => nav(`/listing/${id}`))}
+        onClick={() => nav(`/listing/hosted/${id}/edit`)}
+        onKeyDown={(e) => handleEnter(e, () => nav(`/listing/hosted/${id}/edit`))}
         tabIndex={0}>
         Edit
       </ResponsiveText>,

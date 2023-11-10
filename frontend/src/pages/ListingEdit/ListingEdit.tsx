@@ -6,7 +6,6 @@ import { useGlobalComponents } from '../../context/GlobalComponentsContext/Globa
 import { UploadFile } from 'antd';
 import { Listing, ListingCreateForm, ListingCreateRequest } from '../../types/listing';
 import { useHosted } from '../Hosted/context/HostedContext';
-
 import { useForm } from 'antd/es/form/Form';
 import { nanoid } from 'nanoid';
 
@@ -23,11 +22,11 @@ const getFormData: (listing: Listing | undefined) => ListingCreateForm | undefin
 
     thumbs: {
       file: {
-        uid: nanoid(),
+        uid: '[IMAGE]' + nanoid(),
         name: 'image',
       },
       fileList: [thumbnail, ...metadata.otherPictures].map((url) => ({
-        uid: nanoid(),
+        uid: '[IMAGE]' + nanoid(),
         name: 'image',
         thumbUrl: url,
       })),

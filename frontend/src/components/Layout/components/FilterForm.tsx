@@ -1,23 +1,14 @@
 import React, { useMemo } from 'react';
 import { Slider, DatePicker, Select, Flex, Space, Button } from 'antd';
-import { useSearch } from '../../../context/SearchContext/SearchContext';
+import { SearchParams, useSearch } from '../../../context/SearchContext/SearchContext';
 import { SORT_BY_RATING } from '../../../constant/constant';
 import { Range } from '../../../types/global';
 import dayjs, { Dayjs } from '../../../utils/dayjs';
 
-type Props = {
-  handleChange: (value: [number, number]) => void;
-};
-const FilterForm = () => {
+const FilterForm = ({ searchParams, setSearchParams }: { searchParams: SearchParams; setSearchParams: React.Dispatch<React.SetStateAction<SearchParams>> }) => {
   const { Option } = Select;
-  const { searchParams, setSearchParams } = useSearch();
   const { dateRange } = searchParams;
-  const [start, end] = useMemo(() => {
-    const [start, end] = dateRange;
-    const dayjsStart = start ? dayjs(start) : undefined;
-    const dayjsEnd = end ? dayjs(end) : undefined;
-    return [dayjsStart, dayjsEnd];
-  }, [dateRange]);
+  const [start, end] = dateRange.map((date) => (date ? dayjs(date) : undefined));
 
   const { priceRange, sortByRating } = searchParams;
   return (

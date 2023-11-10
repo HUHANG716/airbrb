@@ -31,7 +31,6 @@ const SearchBar = () => {
       notify.error('Start date should be before end date');
       return;
     }
-
     nav2('/');
     emitFilterSignal();
     setIsModalOpen(false);
@@ -60,7 +59,10 @@ const SearchBar = () => {
           </Space>
         }
         open={isModalOpen}>
-        <FilterForm />
+        <FilterForm
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+        />
       </Modal>
       <Search
         allowClear
