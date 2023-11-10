@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
 import { Popover } from 'antd';
 import { useHosted } from '../../../pages/Hosted/context/HostedContext';
-
 import ToPublishView from './ToPublishView';
 import ToUnpublishView from './ToUnpublishView';
 import { useListingCard } from '../ListingCard';
-import styled from 'styled-components';
+import { ResponsiveText } from '../../../styles/GlobalStyle';
+import { handleEnter } from '../../../utils/utils';
 
-const NoAvailableDates = styled.div`
-  cursor: default;
-  color: #ff4d4f;
-`;
 const PublishedDropdown = () => {
-  const { id, viewer } = useListingCard();
+  const { id } = useListingCard();
   const [open, setOpen] = useState(false);
   const { getOneListing } = useHosted();
   const availability = getOneListing(id)?.availability;
@@ -20,27 +16,30 @@ const PublishedDropdown = () => {
   const handleOpenChange = (flag: boolean) => {
     setOpen(flag);
   };
-
-  const triggerResult: Record<
-    string,
-    () => {
-      text: React.ReactNode;
-      popover: React.ReactNode;
-    }
-  > = {
-    common: () => ({
-      text: isAvailable ? 'View Available Dates' : <NoAvailableDates>No Available Dates</NoAvailableDates>,
-      popover: isAvailable && <ToUnpublishView closePopover={() => setOpen(false)} availability={availability} />,
-    }),
-    owner: () => ({
-      text: isAvailable ? 'Available' : 'Publish',
-      popover: isAvailable ? <ToUnpublishView closePopover={() => setOpen(false)} availability={availability} /> : <ToPublishView />,
-    }),
+  // eslint-disable-next-line
+  const Content = () => {
+    let res;
+    isAvailable &&
+      (res = (
+        <ToUnpublishView
+          closePopover={() => setOpen(false)}
+          availability={availability}
+        />
+      ));
+    !isAvailable && (res = <ToPublishView />);
+    return res;
   };
-  const { popover, text } = triggerResult[viewer]();
   return (
-    <Popover destroyTooltipOnHide onOpenChange={handleOpenChange} open={open} content={popover} trigger={['click']}>
-      {text}
+    <Popover
+      onOpenChange={handleOpenChange}
+      open={open}
+      content={Content}
+      trigger={['click']}>
+      <ResponsiveText
+        tabIndex={0}
+        onKeyDown={(e) => handleEnter(e, () => setOpen(true))}>
+        {isAvailable ? 'View Available' : 'Publish'}
+      </ResponsiveText>
     </Popover>
   );
 };

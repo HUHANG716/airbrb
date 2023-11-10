@@ -5,11 +5,12 @@ import { useGlobalComponents } from '../../../context/GlobalComponentsContext/Gl
 import apiReq from '../../../utils/apiReq';
 import { useUser } from '../../../context/UserContext/UserContext';
 import { Id } from '../../../types/global';
-import { isEquivalent } from '../../../utils/utils';
+import { isEquivalent, sortByAlphabet } from '../../../utils/utils';
 
 interface HostedContextType {
   listings: Listing[];
   listingsMy: Listing[];
+  listingsPublished: Listing[];
   listingDel: (listingId: Id) => void;
   reloadHosted: () => void;
   getOneListing: (listingId: Id) => Listing | undefined;
@@ -18,14 +19,15 @@ interface HostedContextType {
 const HostedContext = createContext<HostedContextType>({
   listings: [],
   listingsMy: [],
+  listingsPublished: [],
   listingDel: () => {
-    // not initialized
+    // init
   },
   reloadHosted: () => {
-    // not initialized
+    // init
   },
   getOneListing: () => {
-    // not initialized
+    // init
     return undefined;
   },
 });
@@ -37,7 +39,7 @@ const HostedProvider = ({ children }: { children: React.ReactNode }) => {
   const { userInfo } = useUser();
   const [listings, setListings] = useState<Listing[]>([]);
   const [listingsMy, setListingsMy] = useState<Listing[]>([]);
-
+  const [listingsPublished, setListingsPublished] = useState<Listing[]>([]);
   const getListingsThin = async (): Promise<ListingSlim[]> => {
     let res: ListingSlim[] = [];
     try {
@@ -55,8 +57,10 @@ const HostedProvider = ({ children }: { children: React.ReactNode }) => {
       const responses = await Promise.all(listingsThin.map((listing) => apiReq.get<{ listing: Listing }>(`/listings/${listing.id}`)));
       res = responses.map((response, index) => ({
         ...response.data.listing,
-        id: listingsThin[index].id,
+        id: (listingsThin[index] as Listing).id,
       }));
+
+      res = sortByAlphabet(res, (listing) => listing.title);
     } catch (err) {
       notify.error(err as string);
     }
@@ -74,24 +78,28 @@ const HostedProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const listingsThin = await getListingsThin();
       const detailedListings = await getListingsDetails(listingsThin);
-      console.log(detailedListings);
 
       setListings(detailedListings);
+      console.log(detailedListings);
+
       setListingsMy(detailedListings.filter((listing) => listing.owner === userInfo?.email));
+      setListingsPublished(detailedListings.filter((listing) => listing.published));
     } catch (err) {
       notify.error(err as string);
     }
   };
   const getOneListing = (listingId: Id) => {
-    return listingsMy.find((listing) => isEquivalent(listing.id, listingId));
+    return listings.find((listing) => isEquivalent(listing.id, listingId));
   };
+
   useEffect(() => {
-    userInfo && getHosted();
+    getHosted();
   }, [userInfo]);
 
   const ctx: HostedContextType = {
     listings,
     listingsMy,
+    listingsPublished,
     listingDel,
     reloadHosted: getHosted,
     getOneListing,

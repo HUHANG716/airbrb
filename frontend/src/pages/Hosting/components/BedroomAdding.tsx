@@ -1,12 +1,10 @@
 import React from 'react';
 import { CloseOutlined } from '@ant-design/icons';
-import { Button, Flex, InputNumber, Select } from 'antd';
+import { Button, Flex, Form, InputNumber, Select } from 'antd';
 import styled from 'styled-components';
-import { List } from 'antd/es/form/Form';
-import FormItem from 'antd/es/form/FormItem';
 import { BEDROOM_TYPES } from '../../../constant/constant';
-
 import { FullWidthItem } from '../../../components/ListingForm/ListingForm';
+import { handleEnter } from '../../../utils/utils';
 
 const InputNum = styled(InputNumber)`
   width: 5rem;
@@ -19,21 +17,29 @@ const Text = styled.div`
 const Option = styled(Select.Option)`
   width: 8rem;
 `;
-
+const { List, Item: FormItem } = Form;
 const BedroomAdding = () => {
   const Options = BEDROOM_TYPES.map((type) => (
-    <Option key={type} value={type}>
+    <Option
+      key={type}
+      value={type}>
       <Text> {type}</Text>
     </Option>
   ));
 
   return (
     <FullWidthItem label='Bedrooms'>
+      + Add Bedroom
       <List name='bedrooms'>
         {(subFields, subOpt) => (
-          <Flex gap='small' vertical>
+          <Flex
+            gap='small'
+            vertical>
             {subFields.map((subField) => (
-              <Flex justify='space-between' gap={'small'} key={subField.key}>
+              <Flex
+                justify='space-between'
+                gap={'small'}
+                key={subField.key}>
                 <Flex gap={'small'}>
                   <FormItem
                     rules={[
@@ -62,18 +68,25 @@ const BedroomAdding = () => {
                     ]}
                     name={[subField.name, 'num']}
                     required
-                    initialValue={subField.name}>
+                    initialValue={0}>
                     <InputNum placeholder='Beds' />
                   </FormItem>
+                  <FormItem>
+                    <CloseOutlined
+                      tabIndex={0}
+                      onKeyDown={(e) => handleEnter(e, () => subOpt.remove(subField.name))}
+                      onClick={() => {
+                        subOpt.remove(subField.name);
+                      }}
+                    />
+                  </FormItem>
                 </Flex>
-                <CloseOutlined
-                  onClick={() => {
-                    subOpt.remove(subField.name);
-                  }}
-                />
               </Flex>
             ))}
-            <Button type='dashed' onClick={() => subOpt.add()} block>
+            <Button
+              type='dashed'
+              onClick={() => subOpt.add()}
+              block>
               + Add Bedroom
             </Button>
           </Flex>

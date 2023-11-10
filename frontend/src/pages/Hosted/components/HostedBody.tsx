@@ -1,25 +1,44 @@
 import React from 'react';
 import ListingCard from '../../../components/ListingCard/ListingCard';
-import { Flex } from 'antd';
+import { Button, Flex } from 'antd';
 import { useHosted } from '../context/HostedContext';
 import styled from 'styled-components';
-const Card = styled(ListingCard)`
+import { Link } from 'react-router-dom';
+import { ResponsiveText } from '../../../styles/GlobalStyle';
+const HostedCard = styled(ListingCard)`
   max-width: 30rem;
+  min-width: 16rem;
 `;
+const ViewBookingButton = styled(Button)`
+  padding-left: 0;
+`;
+
 const HostedBody = ({ className }: { className?: string }) => {
   const { listingsMy } = useHosted();
 
   return (
-    <Flex className={className} gap='large' vertical>
+    <Flex
+      className={className}
+      gap='large'
+      vertical>
       {listingsMy.map((listing) => {
         return (
-          <Card
-            coverStyle={{
-              maxHeight: '13rem',
-            }}
-            viewer='owner'
+          <Flex
+            gap={'small'}
             key={listing.id}
-            listing={listing}></Card>
+            align='end'>
+            <HostedCard
+              coverStyle={{
+                maxHeight: '10rem',
+              }}
+              viewer='owner'
+              listing={listing}></HostedCard>
+            <Link to={`${listing.id}/booking`}>
+              <ViewBookingButton type='link'>
+                <ResponsiveText>View Booking {'>'}</ResponsiveText>
+              </ViewBookingButton>
+            </Link>
+          </Flex>
         );
       })}
     </Flex>

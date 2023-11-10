@@ -12,12 +12,12 @@ interface Availability {
 type BedroomType = (typeof BEDROOM_TYPE)[number];
 type PlaceType = (typeof PLACE_TYPES)[number];
 type Viewer = 'owner' | 'common';
-interface bedroom {
+interface Bedroom {
   type: BedroomType;
   num: number;
 }
 interface Metadata {
-  bedrooms: bedroom[];
+  bedrooms: Bedroom[];
   numBathrooms: number;
   otherPictures: Img[];
   amenities: string[];
@@ -40,6 +40,10 @@ interface Listing {
   owner: string;
   published: boolean;
   availability: Availability[];
+  query?: {
+    dateRange: Range<string>;
+    nights: number;
+  };
 }
 interface ListingCreateForm extends Omit<Metadata, 'otherPictures'> {
   title: string;
@@ -59,8 +63,10 @@ interface ListingCreateRequest {
 type OmitForCommon = 'reviews' | 'postedOn' | 'owner' | 'published';
 
 type ListingSlim = Omit<Listing, OmitForCommon>;
-type ListingFormProps = Omit<ListingCreateForm, 'thumbs'> & { thumbnail: string };
+type ListingFormProps = Omit<ListingCreateForm, 'thumbs'> & {
+  thumbnail: string;
+};
 interface NewListingResponse {
   listingId: number;
 }
-export type { Listing, ListingCreateForm, NewListingResponse, ListingSlim, BedroomType, ListingCreateRequest, ListingFormProps, Availability, Viewer };
+export type { Listing, ListingCreateForm, NewListingResponse, ListingSlim, BedroomType, ListingCreateRequest, ListingFormProps, Availability, Viewer, Review, Bedroom, Address };

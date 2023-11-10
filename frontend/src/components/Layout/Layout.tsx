@@ -6,6 +6,7 @@ import { flexCenter, flexH, flexV } from '../../styles/FlexStyle';
 import SearchBar from './components/SearchBar';
 import HeaderMenu from './components/HeaderMenu';
 import Logo from './components/Logo';
+import { SearchProvider } from '../../context/SearchContext/SearchContext';
 
 const { Header: _Header, Content: _Content, Footer: _Footer } = _Layout;
 
@@ -15,31 +16,32 @@ const Wrapper = styled(_Layout)`
 `;
 const Header = styled(_Header)`
   ${flexH}
+  padding: 1rem;
   align-items: center;
   justify-content: space-between;
 `;
 const Content = styled(_Content)`
   ${flexV}
   align-items: center;
-  padding: 4rem;
 `;
 const Footer = styled(_Footer)`
   ${flexCenter}
 `;
 const Layout = () => {
   return (
-    <Wrapper>
-      <Header>
-        <Logo />
-        <SearchBar />
-        <HeaderMenu />
-      </Header>
-      <Content>
-        <Outlet />
-      </Content>
-
-      <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
-    </Wrapper>
+    <SearchProvider>
+      <Wrapper>
+        <Header>
+          <Logo />
+          <SearchBar />
+          <HeaderMenu />
+        </Header>
+        <Content>
+          <Outlet />
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
+      </Wrapper>
+    </SearchProvider>
   );
 };
 

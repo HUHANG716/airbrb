@@ -33,6 +33,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const login = (user: UserInfo) => {
     setUserInfo(user);
     lsSave(STORAGE_KEY_USER, user);
+    console.log(user);
   };
   const logout = () => {
     setUserInfo(null);

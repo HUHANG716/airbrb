@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
-import { Card, Form } from '../Registration/Registration';
-import { Button, Flex, Input } from 'antd';
+import { Form } from '../Registration/Registration';
+import { Button, Flex, Input, Card as _Card } from 'antd';
 import { AuthResponse, UserLoginForm } from '../../types/user';
 import { Link as _Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { useGlobalComponents } from '../../context/GlobalComponentsContext/GlobalComponentsContext';
-
 import apiReq from '../../utils/apiReq';
 import { useUser } from '../../context/UserContext/UserContext';
+import { CommonContentWrapper, sm } from '../../styles/GlobalStyle';
+import FormItem from 'antd/es/form/FormItem';
 
-export const Link = styled(_Link)`
+const Link = styled(_Link)`
   margin-top: 20px;
 `;
-const { Item } = Form;
+
+const Card = styled(_Card)`
+  ${sm`width: 350px;`}
+`;
 const Login = () => {
   const [form] = Form.useForm<UserLoginForm>();
   const { notify } = useGlobalComponents();
@@ -29,6 +33,8 @@ const Login = () => {
         email,
         token,
       });
+      console.log(123);
+
       notify.success('Log in successfully!');
       nav2('/');
     } catch (err) {
@@ -37,39 +43,49 @@ const Login = () => {
     }
   };
   return (
-    <Card title='Log In'>
-      <Form form={form} disabled={disabled} layout='vertical' onFinish={handleFinish}>
-        <Flex vertical>
-          <Item
-            label='Email'
-            name='email'
-            rules={[
-              {
-                required: true,
-                message: 'Please input your email!',
-              },
-            ]}>
-            <Input />
-          </Item>
-          <Item
-            label='Password'
-            name='password'
-            rules={[
-              {
-                required: true,
-                message: 'Please input your password!',
-              },
-            ]}>
-            <Input />
-          </Item>
-          <Button htmlType='submit' type='primary'>
-            Log In
-          </Button>
+    <CommonContentWrapper>
+      <Card title='Log In'>
+        <Form
+          form={form}
+          disabled={disabled}
+          layout='vertical'
+          onFinish={handleFinish}>
+          <Flex vertical>
+            <FormItem
+              required
+              label='Email'
+              name='email'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your email!',
+                },
+              ]}>
+              <Input />
+            </FormItem>
+            <FormItem
+              required
+              label='Password'
+              name='password'
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input your password!',
+                },
+              ]}>
+              <Input />
+            </FormItem>
+            <Button
+              htmlType='submit'
+              type='primary'>
+              Log In
+            </Button>
 
-          <Link to='/register'>Don&apos;t have an account? Sign up here!</Link>
-        </Flex>
-      </Form>
-    </Card>
+            <Link to='/register'>Don&apos;t have an account? Sign up here!</Link>
+          </Flex>
+        </Form>
+      </Card>
+    </CommonContentWrapper>
   );
 };
 

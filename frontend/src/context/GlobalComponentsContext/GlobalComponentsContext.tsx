@@ -1,7 +1,6 @@
-/** @format */
-
 import { MessageInstance } from 'antd/es/message/interface';
 import useMessage from 'antd/es/message/useMessage';
+
 import React, { createContext, useContext } from 'react';
 
 export interface GlobalComponentsContextType {

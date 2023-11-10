@@ -4,18 +4,19 @@ import { Button, Flex, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import HostedBody from '../Hosted/components/HostedBody';
+import { CommonContentWrapper } from '../../styles/GlobalStyle';
 
-const Wrapper = styled(Flex)`
-  width: 100%;
-`;
 const { Title } = Typography;
 const HostedHeader = ({ className }: { className?: string }) => {
   const { userInfo } = useUser();
-  console.log(userInfo);
+
   return (
-    <Flex className={className} align='center' justify='space-between'>
+    <Flex
+      className={className}
+      align='center'
+      justify='space-between'>
       <Title level={2}>Welcome, {userInfo?.email}</Title>
-      <Link to='/hosting'>
+      <Link to='/listing/create'>
         <Button size='large'>Create a listing</Button>
       </Link>
     </Flex>
@@ -32,10 +33,12 @@ const Body = styled(HostedBody)`
 
 const ListingHosted = () => {
   return (
-    <Wrapper align='center' justify='flex-start' vertical>
+    <CommonContentWrapper
+      justify='flex-start'
+      vertical>
       <Top />
       <Body />
-    </Wrapper>
+    </CommonContentWrapper>
   );
 };
 

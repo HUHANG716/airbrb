@@ -57,7 +57,7 @@ const ListingEdit = () => {
       address: {
         address,
       },
-      thumbnail: thumbUrls[0],
+      thumbnail: thumbUrls[0] || '',
       price,
       metadata: {
         propertyType,
@@ -68,17 +68,22 @@ const ListingEdit = () => {
       },
     };
     try {
-      const res = await apiReq.put(`/listings/${id}`, requestBody);
+      await apiReq.put(`/listings/${id}`, requestBody);
       notify.success('Listing updated successfully!');
-      console.log(res);
+
       reloadHosted();
-      nav2('/hosted');
+      nav2('/listing/hosted');
     } catch (err) {
       notify.error(err as string);
     }
   };
 
-  return <ListingForm form={form} handleFinish={getListingData} />;
+  return (
+    <ListingForm
+      form={form}
+      handleFinish={getListingData}
+    />
+  );
 };
 
 export default ListingEdit;

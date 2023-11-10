@@ -1,11 +1,30 @@
-import { Divider, Flex, Upload } from 'antd';
+import { Divider, Flex, FormInstance, Upload } from 'antd';
 import React from 'react';
 
 import { PlusOutlined } from '@ant-design/icons';
 import { FullWidthItem } from '../../../components/ListingForm/ListingForm';
-import { UploadChangeParam } from 'antd/es/upload';
+import { UploadChangeParam, UploadFile } from 'antd/es/upload';
+import { getBase64 } from '../../../utils/utils';
+import { nanoid } from 'nanoid';
 
-const ThumbUpload = ({ thumbFiles }: { thumbFiles: UploadChangeParam }) => {
+const ThumbUpload = ({ thumbFiles, form }: { thumbFiles?: UploadChangeParam; form: FormInstance }) => {
+  const handleUpload = (file: File) => {
+    getBase64(file as File).then((res) => {
+      form.setFieldsValue({
+        thumbs: {
+          fileList: [
+            ...(form.getFieldValue('thumbs')?.fileList || []).filter((file: UploadFile) => file.uid.startsWith('[IMAGE]')),
+            {
+              uid: '[IMAGE]' + nanoid(),
+              url: res,
+              thumbUrl: res,
+            },
+          ],
+        },
+      });
+    });
+    return false;
+  };
   return (
     <>
       <Divider>Pictures of your property</Divider>
@@ -23,8 +42,14 @@ const ThumbUpload = ({ thumbFiles }: { thumbFiles: UploadChangeParam }) => {
         ]}
         name='thumbs'
         label='Images of your property'>
-        <Upload listType='picture-card' fileList={thumbFiles?.fileList} beforeUpload={() => false}>
-          <Flex gap={'middle'} align='center' vertical>
+        <Upload
+          listType='picture-card'
+          fileList={thumbFiles?.fileList || []}
+          beforeUpload={handleUpload}>
+          <Flex
+            gap={'middle'}
+            align='center'
+            vertical>
             <PlusOutlined />
             Upload
           </Flex>

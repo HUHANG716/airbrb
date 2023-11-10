@@ -1,0 +1,3 @@
+- clean UI, easy to navigate and understand
+- dark theme for health of eyes
+- effective interaction to get needed information

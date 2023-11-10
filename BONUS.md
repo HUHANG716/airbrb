@@ -1,0 +1,3 @@
+- the project is written in typescript
+- multiple images can be uploaded when creating a listing
+- multiple filters can be applied when searching for listings

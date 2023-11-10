@@ -1,75 +1,118 @@
 import React, { createContext, useContext } from 'react';
-import { Card as _Card, Flex, Typography } from 'antd';
+import { Card as _Card, Flex, Space, Typography } from 'antd';
 
 import styled from 'styled-components';
 
 import ListingCardBottom from './components/ListingCardBottom';
 import ListingCardTop from './components/ListingCardTop';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import PublishedDropdown from './components/PublishedDropdown';
 import { Listing, Viewer } from '../../types/listing';
 import { useHosted } from '../../pages/Hosted/context/HostedContext';
-import { fullWH } from '../../styles/FlexStyle';
+
+import { handleEnter, processListing } from '../../utils/utils';
+import Tag from '../Tag/Tag';
+import { useBooking } from '../../context/BookingContext/BookingContext';
+import { ResponsiveText } from '../../styles/GlobalStyle';
+
 export const ACFlex = styled(Flex)`
   align-items: center;
 `;
-const { Title } = Typography;
+
 const Image = styled.img`
   cursor: pointer;
   object-fit: cover;
+  border-radius: 0;
   transition: transform 0.2s ease-in-out;
 `;
 const Card = styled(_Card)`
   overflow: hidden;
   width: 100%;
 `;
-const processListing = (listing: Listing) => {
-  const { id, title, thumbnail, price, metadata, reviews } = listing;
-  const { bedrooms = [], propertyType, numBathrooms } = metadata;
-  const numBeds = bedrooms.reduce((acc, cur) => acc + cur.num, 0);
-  const rating = reviews.reduce((acc, cur) => acc + cur.rating, 0) / reviews.length || 0;
-  const numReviews = reviews.length;
-  return { title, thumbnail, price, propertyType, numBeds, numBathrooms, rating, numReviews, id };
-};
+
 type Props = {
   listing: Listing;
   className?: string;
   viewer?: Viewer;
   coverStyle?: React.CSSProperties;
+  onClick?: () => void;
 };
-const Del = styled(Typography.Text)`
-  ${fullWH}
-`;
-type ListingCardContextType = ReturnType<typeof processListing> & { viewer: string };
+
+type ListingCardContextType = ReturnType<typeof processListing> & {
+  viewer: string;
+};
 const ListingCardContext = createContext<ListingCardContextType>({} as ListingCardContextType);
 export const useListingCard = () => useContext(ListingCardContext);
-const ListingCard = ({ listing, className, viewer = 'common', coverStyle }: Props) => {
+const ListingCard = ({ listing, className = '', viewer = 'common', coverStyle, onClick }: Props) => {
   const listingProcessed = processListing(listing);
   const { listingDel } = useHosted();
+  const nav = useNavigate();
+  const { getBookingsMyOfListing } = useBooking();
   const { thumbnail, price, id } = listingProcessed;
-  const nav2 = useNavigate();
-  const nav2Edit = () => {
-    nav2(`/hosted/edit/${id}`);
+  const { nights } = listing?.query || {
+    nights: null,
   };
+  const priceRenderStr =
+    nights === null
+      ? `$${price} / night`
+      : `
+  $${price * nights} total
+`;
+  const haveBooked = Boolean(getBookingsMyOfListing(id).length);
   const actionsRender = {
     owner: [
-      <Link key={'1'} to={`/hosted/edit/${id}`}>
+      <ResponsiveText
+        key={'0'}
+        role='link'
+        onClick={() => nav(`/listing/${id}`)}
+        onKeyDown={(e) => handleEnter(e, () => nav(`/listing/${id}`))}
+        tabIndex={0}>
         Edit
-      </Link>,
-      <PublishedDropdown key={'2'} />,
-      <Del onClick={() => listingDel(id)} key={'3'}>
+      </ResponsiveText>,
+
+      <PublishedDropdown key={'1'} />,
+
+      <ResponsiveText
+        role='button'
+        tabIndex={0}
+        onKeyDown={(e) => handleEnter(e, () => listingDel(id))}
+        onClick={() => listingDel(id)}
+        key={'3'}>
         Delete
-      </Del>,
+      </ResponsiveText>,
     ],
-    common: [<PublishedDropdown key={'1'} />],
+    common: [<PublishedDropdown key={'4'} />],
   };
   return (
     <ListingCardContext.Provider value={{ ...listingProcessed, viewer }}>
-      <Card bordered size='small' title={<ListingCardTop />} actions={actionsRender[viewer]} className={className} cover={<Image style={coverStyle} onClick={nav2Edit} alt='Pic' src={thumbnail} />}>
-        <Flex vertical gap={'small'}>
-          <Title level={5}>${price}/night</Title>
+      <Card
+        bordered={false}
+        size='small'
+        actions={actionsRender[viewer]}
+        className={className}
+        cover={
+          <Image
+            tabIndex={0}
+            onKeyDown={(e) => {
+              e.key === 'Enter' && onClick && onClick();
+            }}
+            style={coverStyle}
+            onClick={onClick}
+            alt='Pic'
+            src={thumbnail}
+          />
+        }>
+        <Flex
+          vertical
+          gap={'small'}>
+          <ListingCardTop />
+          <Space>
+            <Typography.Text strong>{priceRenderStr}</Typography.Text>
+            {nights && <Tag>{nights + ' night'}</Tag>}
+          </Space>
+          {haveBooked && <Tag>This is your booking</Tag>}
           <ListingCardBottom />
         </Flex>
       </Card>

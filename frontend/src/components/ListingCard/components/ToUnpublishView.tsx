@@ -34,8 +34,13 @@ const ToUnpublishView = ({ availability, closePopover }: Props) => {
     }
   };
   return (
-    <Flex vertical gap={'middle'} align='center'>
+    <Flex
+      vertical
+      gap={'middle'}
+      align='center'>
       {availability?.map(({ start, end }) => {
+        console.log(start, end);
+
         return (
           <Item key={nanoid()}>
             {start} - {end}
@@ -44,7 +49,11 @@ const ToUnpublishView = ({ availability, closePopover }: Props) => {
       })}
       {!availability?.length && <Item>No available dates</Item>}
       {viewer === 'owner' && (
-        <UnpublishButton onClick={handleUnpublish} size='small' type='primary' danger>
+        <UnpublishButton
+          onClick={handleUnpublish}
+          size='small'
+          type='primary'
+          danger>
           Unpublish
         </UnpublishButton>
       )}

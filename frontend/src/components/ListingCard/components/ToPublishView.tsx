@@ -1,27 +1,22 @@
-import { Button, DatePicker, Flex, Form } from 'antd';
-import { useForm } from 'antd/es/form/Form';
-import { Dayjs } from 'dayjs';
-import React from 'react';
+import { Button, DatePicker, Flex } from 'antd';
+
+import React, { useState } from 'react';
 import { useHosted } from '../../../pages/Hosted/context/HostedContext';
 import { useGlobalComponents } from '../../../context/GlobalComponentsContext/GlobalComponentsContext';
 import { Availability } from '../../../types/listing';
 
 import apiReq from '../../../utils/apiReq';
-import FormItem from 'antd/es/form/FormItem';
+
 import styled from 'styled-components';
 import { useListingCard } from '../ListingCard';
-
-type Dates = [Dayjs, Dayjs];
+import { nanoid } from 'nanoid';
+import dayjs from '../../../utils/dayjs';
 
 const ViewButtonWrapper = styled(Button)`
   width: 6rem;
   margin: auto;
 `;
-const datePreprocess = (dates: Dates[]) => {
-  return dates.map(([start, end]) => {
-    return { start: start.format('DD/MM/YYYY'), end: end.format('DD/MM/YYYY') };
-  });
-};
+
 const OperationButton = ({ add, operations }: { add: boolean; operations: [() => void, () => void] }) => {
   const { handleClick, text } = add
     ? {
@@ -34,18 +29,25 @@ const OperationButton = ({ add, operations }: { add: boolean; operations: [() =>
       };
 
   return (
-    <Button onClick={handleClick} style={{ marginLeft: '0.5rem' }} shape='circle'>
+    <Button
+      onClick={handleClick}
+      shape='circle'>
       {text}
     </Button>
   );
 };
 const ToPublishView = () => {
-  const [form] = useForm();
   const { notify } = useGlobalComponents();
-  const { getOneListing, reloadHosted } = useHosted();
+  const { reloadHosted } = useHosted();
   const { id } = useListingCard();
+  const [dates, setDates] = useState([{ start: '', end: '' }]);
+  const isValidate = (dates: Availability[]) => {
+    return dates.every((date) => date.start && date.end);
+  };
+
   const handleSubmit = async (dates: Availability[]) => {
-    console.log(getOneListing(id));
+    console.log(dates);
+
     try {
       await apiReq.put(`/listings/publish/${id}`, {
         availability: dates,
@@ -56,41 +58,57 @@ const ToPublishView = () => {
       notify.error(err as string);
     }
   };
+  const addDateRange = () => {
+    setDates([...dates, { start: '', end: '' }]);
+  };
 
+  // 移除日期范围
+  const removeDateRange = (index: number) => {
+    const newDates = dates.filter((_, i) => i !== index);
+    setDates(newDates);
+  };
+
+  // 更新日期范围
+  const updateDateRange = (index: number, start: string, end: string) => {
+    const newDates = [...dates];
+    newDates[index] = { start, end };
+    setDates(newDates);
+  };
   return (
-    <Form
-      form={form}
-      onFinish={() => {
-        const dates = datePreprocess(form.getFieldValue('dates'));
-        handleSubmit(dates);
-      }}>
-      <Form.List initialValue={[[]]} name='dates'>
-        {(fields, { add, remove }) => (
-          <Flex vertical>
-            {fields.map((field, index) => (
-              <FormItem key={field.key}>
-                <FormItem
-                  {...field}
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Missing date',
-                    },
-                  ]}
-                  validateTrigger={['onChange', 'onBlur']}
-                  noStyle>
-                  <DatePicker.RangePicker format={'DD/MM/YYYY'} />
-                </FormItem>
-                <OperationButton add={index === fields.length - 1} operations={[add, () => remove(field.name)]} />
-              </FormItem>
-            ))}
-            <ViewButtonWrapper type='primary' size='small' htmlType='submit'>
-              Publish
-            </ViewButtonWrapper>
-          </Flex>
-        )}
-      </Form.List>
-    </Form>
+    <Flex
+      vertical
+      gap={'small'}>
+      {dates.map((dateRange, index) => (
+        <Flex
+          gap={'small'}
+          key={nanoid()}>
+          <DatePicker
+            placeholder='Start'
+            value={dateRange.start ? dayjs(dateRange.start) : null}
+            format={'DD/MM/YYYY'}
+            onChange={(_, dateString) => updateDateRange(index, dateString, dateRange.end)}
+          />
+
+          <DatePicker
+            placeholder='End'
+            value={dateRange.end ? dayjs(dateRange.end) : null}
+            format={'DD/MM/YYYY'}
+            onChange={(_, dateString) => updateDateRange(index, dateRange.start, dateString)}
+          />
+          <OperationButton
+            add={index === dates.length - 1}
+            operations={[addDateRange, () => removeDateRange(index)]}
+          />
+        </Flex>
+      ))}
+      <ViewButtonWrapper
+        disabled={!isValidate(dates)}
+        type='primary'
+        size='small'
+        onClick={() => handleSubmit(dates)}>
+        Publish
+      </ViewButtonWrapper>
+    </Flex>
   );
 };
 

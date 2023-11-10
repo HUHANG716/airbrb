@@ -1,47 +1,106 @@
-import React from 'react';
-import { Form, Slider, DatePicker, Select } from 'antd';
+import React, { useMemo } from 'react';
+import { Slider, DatePicker, Select, Flex, Space, Button } from 'antd';
+import { useSearch } from '../../../context/SearchContext/SearchContext';
+import { SORT_BY_RATING } from '../../../constant/constant';
+import { Range } from '../../../types/global';
+import dayjs, { Dayjs } from '../../../utils/dayjs';
+
+type Props = {
+  handleChange: (value: [number, number]) => void;
+};
 const FilterForm = () => {
-  const { Item } = Form;
-  const { RangePicker } = DatePicker;
   const { Option } = Select;
+  const { searchParams, setSearchParams } = useSearch();
+  const { dateRange } = searchParams;
+  const [start, end] = useMemo(() => {
+    const [start, end] = dateRange;
+    const dayjsStart = start ? dayjs(start) : undefined;
+    const dayjsEnd = end ? dayjs(end) : undefined;
+    return [dayjsStart, dayjsEnd];
+  }, [dateRange]);
+
+  const { priceRange, sortByRating } = searchParams;
   return (
-    <Form labelCol={{ span: 24 }} wrapperCol={{ span: 24 }} layout='vertical'>
-      <Item label='Bedrooms'>
-        <Slider
-          marks={{
-            0: '0',
-            5: '5',
-            10: '10+',
+    <Flex
+      vertical
+      gap={'small'}>
+      Beds
+      <Slider
+        id='bedroom-slider'
+        value={searchParams.numBedroomsRange}
+        onChange={(value) => {
+          setSearchParams({
+            ...searchParams,
+            numBedroomsRange: value as Range<number>,
+          });
+        }}
+        marks={{
+          0: '0',
+          5: '5',
+          10: '10+',
+        }}
+        max={10}
+        range
+        step={1}
+      />
+      Price
+      <Slider
+        data-testid='price-slider'
+        value={priceRange}
+        onChange={(value) => {
+          setSearchParams({
+            ...searchParams,
+            priceRange: value as Range<number>,
+          });
+        }}
+        marks={{
+          0: '0',
+          2000: '2000+',
+          1000: '1000',
+        }}
+        max={2000}
+        range
+        step={100}
+      />
+      Date Range
+      <Space>
+        <DatePicker
+          data-testid='start-date-picker'
+          value={start as Dayjs}
+          onChange={(_, value) => {
+            setSearchParams({
+              ...searchParams,
+              dateRange: [value, dateRange[1]],
+            });
           }}
-          max={10}
-          range
-          step={1}
-          defaultValue={[0, 10]}
+          format={'DD/MM/YYYY'}
         />
-      </Item>
-      <Item label='Price'>
-        <Slider
-          marks={{
-            0: '0',
-            2000: '2000+',
-            1000: '1000',
+        <DatePicker
+          data-testid='end-date-picker'
+          value={end as Dayjs}
+          onChange={(_, value) => {
+            setSearchParams({
+              ...searchParams,
+              dateRange: [dateRange[0], value],
+            });
           }}
-          max={2000}
-          range
-          step={100}
-          defaultValue={[0, 2000]}
+          format={'DD/MM/YYYY'}
         />
-      </Item>
-      <Item label='Date'>
-        <RangePicker />
-      </Item>
-      <Item label='Sort by Review Ratings'>
-        <Select>
-          <Option>1</Option>
-          <Option>2</Option>
-        </Select>
-      </Item>
-    </Form>
+      </Space>
+      Sort By
+      <Select
+        onChange={(value) =>
+          setSearchParams({
+            ...searchParams,
+            sortByRating: value,
+          })
+        }
+        value={sortByRating}>
+        <Option value={SORT_BY_RATING.DEFAULT}>Default</Option>
+        <Option value={SORT_BY_RATING.HIGH_TO_LOW}>High to Low</Option>
+        <Option value={SORT_BY_RATING.LOW_TO_HIGH}> Low to High</Option>
+      </Select>
+    </Flex>
   );
 };
 
