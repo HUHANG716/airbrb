@@ -11,7 +11,7 @@ import { Booking } from '../../../types/booking';
 import { useForm } from 'antd/es/form/Form';
 import FormItem from 'antd/es/form/FormItem';
 import { useGlobalComponents } from '../../../context/GlobalComponentsContext/GlobalComponentsContext';
-import { useHosted } from '../../Hosted/context/HostedContext';
+import { useHosted } from '../../../context/HostedContext/HostedContext';
 
 type Props = {
   reviews: Review[];

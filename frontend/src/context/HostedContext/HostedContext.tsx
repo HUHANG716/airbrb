@@ -1,11 +1,11 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-import { Listing, ListingSlim } from '../../../types/listing';
-import { useGlobalComponents } from '../../../context/GlobalComponentsContext/GlobalComponentsContext';
-import apiReq from '../../../utils/apiReq';
-import { useUser } from '../../../context/UserContext/UserContext';
-import { Id } from '../../../types/global';
-import { isEquivalent, sortByAlphabet } from '../../../utils/utils';
+import { Listing, ListingSlim } from '../../types/listing';
+import { useGlobalComponents } from '../GlobalComponentsContext/GlobalComponentsContext';
+import apiReq from '../../utils/apiReq';
+import { useUser } from '../UserContext/UserContext';
+import { Id } from '../../types/global';
+import { isEquivalent, sortByAlphabet } from '../../utils/utils';
 
 interface HostedContextType {
   listings: Listing[];
@@ -70,6 +70,7 @@ const HostedProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await apiReq.delete(`/listings/${listingId}`);
       getHosted();
+      notify.success('Listing deleted successfully!');
     } catch (err) {
       notify.error(err as string);
     }
@@ -78,10 +79,7 @@ const HostedProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const listingsThin = await getListingsThin();
       const detailedListings = await getListingsDetails(listingsThin);
-
       setListings(detailedListings);
-      console.log(detailedListings);
-
       setListingsMy(detailedListings.filter((listing) => listing.owner === userInfo?.email));
       setListingsPublished(detailedListings.filter((listing) => listing.published));
     } catch (err) {

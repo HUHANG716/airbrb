@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import apiReq from '../../../utils/apiReq';
 
 import { useGlobalComponents } from '../../../context/GlobalComponentsContext/GlobalComponentsContext';
-import { useHosted } from '../../../pages/Hosted/context/HostedContext';
+import { useHosted } from '../../../context/HostedContext/HostedContext';
 import { useListingCard } from '../ListingCard';
 import { nanoid } from 'nanoid';
 

@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import Search from 'antd/es/input/Search';
 import styled from 'styled-components';
 import { flexCenter } from '../../../styles/FlexStyle';
-import { Button, Modal, Space } from 'antd';
 import { FilterOutlined } from '@ant-design/icons';
-import FilterForm from './FilterForm';
 import { useSearch } from '../../../context/SearchContext/SearchContext';
 import { useNavigate } from 'react-router-dom';
 import { handleEnter, isDateEmpty } from '../../../utils/utils';
 import dayjs from '../../../utils/dayjs';
 import { useGlobalComponents } from '../../../context/GlobalComponentsContext/GlobalComponentsContext';
+import FilterModal from './FilterModal';
 
 const Wrapper = styled.div`
   ${flexCenter}
   width: 500px;
+`;
+const SearchInput = styled(Search)`
+  padding: 0 0.5rem;
 `;
 
 const SearchBar = () => {
@@ -43,28 +45,21 @@ const SearchBar = () => {
     setIsModalOpen(false);
     emitFilterSignal();
   };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      searchContent: e.target.value,
+    }));
+  };
   return (
     <Wrapper>
-      <Modal
-        title='Filter'
+      <FilterModal
         onCancel={handleCancel}
-        footer={
-          <Space>
-            <Button onClick={handleReset}>Reset</Button>
-            <Button
-              onClick={handleOk}
-              type='primary'>
-              OK
-            </Button>
-          </Space>
-        }
-        open={isModalOpen}>
-        <FilterForm
-          searchParams={searchParams}
-          setSearchParams={setSearchParams}
-        />
-      </Modal>
-      <Search
+        onOk={handleOk}
+        onReset={handleReset}
+        open={isModalOpen}
+      />
+      <SearchInput
         allowClear
         value={searchParams.searchContent}
         addonBefore={
@@ -74,12 +69,7 @@ const SearchBar = () => {
             onClick={showModal}
           />
         }
-        onChange={(e) =>
-          setSearchParams((prev) => ({
-            ...prev,
-            searchContent: e.target.value,
-          }))
-        }
+        onChange={handleChange}
         placeholder='input search text'
         onSearch={handleOk}
       />

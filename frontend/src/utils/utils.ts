@@ -26,6 +26,7 @@ const sortByAlphabet = <T>(items: T[], key: (item: T) => string) => {
 };
 
 const calcRating = (reviews: Review[]) => {
+  if (!reviews.length) return '~';
   const rating = reviews.reduce((acc, cur) => acc + cur.rating, 0) / reviews.length || 0;
   return rating.toFixed(1);
 };
@@ -35,7 +36,7 @@ const calcBedsNum = (bedrooms: Bedroom[]) => {
   return numBeds;
 };
 const processListing = (listing: Listing) => {
-  const { id, title, thumbnail, price, metadata, reviews, published } = listing;
+  const { id, title, thumbnail, price, metadata, reviews, published, address } = listing;
   const { bedrooms = [], propertyType, numBathrooms } = metadata;
   const numBeds = calcBedsNum(bedrooms);
   const rating = calcRating(reviews);
@@ -51,6 +52,7 @@ const processListing = (listing: Listing) => {
     numReviews,
     id,
     published,
+    address,
   };
   return result;
 };
@@ -78,4 +80,7 @@ const isDateEmpty = (date: Range<string>) => {
 const handleEnter = (e: React.KeyboardEvent<HTMLElement>, fn: () => void) => {
   e.key === 'Enter' && fn();
 };
-export { lsSave, lsGet, lsRm, isEquivalent, sortByAlphabet, processListing, calcRating, calcBedsNum, getBase64, diffDays, nItem, isDateEmpty, handleEnter };
+const isDigit = (str: string) => {
+  return /^\d+(\.\d+)?$/.test(str);
+};
+export { lsSave, lsGet, lsRm, isEquivalent, sortByAlphabet, processListing, calcRating, calcBedsNum, getBase64, diffDays, nItem, isDateEmpty, handleEnter, isDigit };

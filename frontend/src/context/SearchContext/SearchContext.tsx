@@ -78,7 +78,7 @@ export const SearchProvider = ({ children }: { children: React.ReactNode }) => {
     result = filter
       .filterBeds(numBedroomsRange, BED_THRESHOLD)
       .filterPrice(priceRange, PRICE_THRESHOLD)
-      .filterTitle(searchContent, searchContent)
+      .filterSearchContent(searchContent, searchContent)
       .filterDate(dateRange, !isDateEmpty(dateRange))
       .sortByRating(sortByRating)
       .get();

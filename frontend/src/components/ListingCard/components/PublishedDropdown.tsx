@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Popover } from 'antd';
-import { useHosted } from '../../../pages/Hosted/context/HostedContext';
+import { useHosted } from '../../../context/HostedContext/HostedContext';
 import ToPublishView from './ToPublishView';
 import ToUnpublishView from './ToUnpublishView';
 import { useListingCard } from '../ListingCard';
-import { ResponsiveText } from '../../../styles/GlobalStyle';
+import { ResponsiveTextPure } from '../../../styles/GlobalStyle';
 import { handleEnter } from '../../../utils/utils';
 
 const PublishedDropdown = () => {
@@ -35,12 +35,12 @@ const PublishedDropdown = () => {
       open={open}
       content={Content}
       trigger={['click']}>
-      <ResponsiveText
+      <ResponsiveTextPure
         role='button'
         tabIndex={0}
         onKeyDown={(e) => handleEnter(e, () => setOpen(true))}>
         {isAvailable ? 'View Available' : 'Publish'}
-      </ResponsiveText>
+      </ResponsiveTextPure>
     </Popover>
   );
 };

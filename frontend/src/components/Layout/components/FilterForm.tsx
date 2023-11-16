@@ -1,6 +1,6 @@
-import React, { useMemo } from 'react';
-import { Slider, DatePicker, Select, Flex, Space, Button } from 'antd';
-import { SearchParams, useSearch } from '../../../context/SearchContext/SearchContext';
+import React from 'react';
+import { Slider, DatePicker, Select, Flex, Space } from 'antd';
+import { BED_THRESHOLD, SearchParams } from '../../../context/SearchContext/SearchContext';
 import { SORT_BY_RATING } from '../../../constant/constant';
 import { Range } from '../../../types/global';
 import dayjs, { Dayjs } from '../../../utils/dayjs';
@@ -28,7 +28,7 @@ const FilterForm = ({ searchParams, setSearchParams }: { searchParams: SearchPar
         marks={{
           0: '0',
           5: '5',
-          10: '10+',
+          10: `${BED_THRESHOLD}+`,
         }}
         max={10}
         range
@@ -46,8 +46,8 @@ const FilterForm = ({ searchParams, setSearchParams }: { searchParams: SearchPar
         }}
         marks={{
           0: '0',
-          2000: '2000+',
           1000: '1000',
+          2000: '2000+',
         }}
         max={2000}
         range
@@ -56,7 +56,6 @@ const FilterForm = ({ searchParams, setSearchParams }: { searchParams: SearchPar
       Date Range
       <Space>
         <DatePicker
-          data-testid='start-date-picker'
           value={start as Dayjs}
           onChange={(_, value) => {
             setSearchParams({
@@ -67,7 +66,6 @@ const FilterForm = ({ searchParams, setSearchParams }: { searchParams: SearchPar
           format={'DD/MM/YYYY'}
         />
         <DatePicker
-          data-testid='end-date-picker'
           value={end as Dayjs}
           onChange={(_, value) => {
             setSearchParams({
@@ -78,7 +76,7 @@ const FilterForm = ({ searchParams, setSearchParams }: { searchParams: SearchPar
           format={'DD/MM/YYYY'}
         />
       </Space>
-      Sort By
+      Rank By Rating From
       <Select
         onChange={(value) =>
           setSearchParams({

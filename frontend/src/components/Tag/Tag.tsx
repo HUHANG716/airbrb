@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const { useToken } = theme;
 
-export type TagType = 'default' | 'success' | 'error' | 'warning';
+export type TagType = 'default' | 'success' | 'error' | 'warning' | 'info';
 type Props = {
   className?: string;
   type?: TagType;
@@ -29,6 +29,7 @@ const Tag = ({ children, className = '', type = 'default' }: Props) => {
     success: token.colorSuccess,
     error: token.colorError,
     warning: token.colorWarning,
+    info: token.colorText,
   };
   return (
     <Wrapper

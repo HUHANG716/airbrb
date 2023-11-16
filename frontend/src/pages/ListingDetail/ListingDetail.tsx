@@ -1,21 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import { useHosted } from '../Hosted/context/HostedContext';
-import { Carousel, Divider, Flex, Typography } from 'antd';
+import { useHosted } from '../../context/HostedContext/HostedContext';
+import { Carousel, Flex, Typography } from 'antd';
 import { nanoid } from 'nanoid';
 import styled from 'styled-components';
-import { calcBedsNum, calcRating, diffDays } from '../../utils/utils';
-
-import { useBooking } from '../../context/BookingContext/BookingContext';
-
-import TitleArea from './components/TitleArea';
-import BasicInfo from './components/BasicInfo';
-import BedDetail from './components/BedDetail';
-import Amenities from './components/Amenities';
-import ReviewArea from './components/ReviewArea';
+import { calcRating, diffDays } from '../../utils/utils';
 import ListingDetailFooter from './components/ListingDetailFooter';
-import { BOOKING_STATUS } from '../../constant/constant';
 import { Review } from '../../types/listing';
+import ListingDetailBody from './components/ListingDetailBody';
 
 const Wrapper = styled(Flex)`
   width: 100%;
@@ -28,10 +20,7 @@ const Img = styled.img`
   width: 100%;
   min-width: 350px;
 `;
-const SubWrapper = styled(Flex)`
-  padding: 3rem;
-  width: 100%;
-`;
+
 const Slider = styled(Carousel)`
   width: 100%;
   margin: 0 auto;
@@ -49,12 +38,7 @@ const ListingDetail = () => {
   const { id = '' } = useParams();
   const location = useLocation();
   const dateRange = location.state?.dateRange;
-  console.log(dateRange);
-
   const { getOneListing } = useHosted();
-  const { getBookingsMyOfListing } = useBooking();
-  const currentBookingsMy = getBookingsMyOfListing(id);
-  const currentBookingMyAccepted = currentBookingsMy?.find((booking) => booking.status === BOOKING_STATUS.ACCEPTED);
   const { thumbnail, metadata, price, reviews, title, owner, address, availability } = getOneListing(id) || {
     thumbnail: '',
     metadata: {
@@ -62,7 +46,7 @@ const ListingDetail = () => {
       propertyType: '',
       bedrooms: [],
       numBathrooms: 0,
-      amenities: ['No information of amenities provided'],
+      amenities: [],
     },
     availability: [],
     price: 0,
@@ -70,61 +54,41 @@ const ListingDetail = () => {
     title: '',
     owner: '',
     address: {
-      address: '',
+      city: '',
+      street: '',
     },
   };
   const { otherPictures, propertyType, bedrooms, numBathrooms, amenities } = metadata;
-
+  const totalPrice = useMemo(() => (dateRange ? diffDays(dateRange[0], dateRange[1]) * price : price), [dateRange, price]);
   return (
     <Wrapper vertical>
       {/* Slider */}
       <Slider>
         {[thumbnail, ...otherPictures].map((url) => (
           <Img
-            alt='d'
+            alt='listing image'
             key={nanoid()}
             src={url}
           />
         ))}
       </Slider>
-      <SubWrapper vertical>
-        {/* Title */}
-        <TitleArea
-          title={title}
-          reviews={reviews}
-          address={address}
-          currentBookingsMy={currentBookingsMy}
-          availability={availability}
-        />
-        <Divider />
-        {/* Basic Info */}
-        <BasicInfo
-          numBathrooms={numBathrooms}
-          numBeds={calcBedsNum(bedrooms)}
-          numBedrooms={bedrooms.length}
-          propertyType={propertyType}
-          owner={owner}
-        />
-        {/* Where you'll sleep */}
-        <Divider />
-        <BedDetail bedrooms={bedrooms} />
-        {/* Where this place offers */}
-        <Divider />
-        <Amenities amenities={amenities} />
-        {/* Review */}
-        <Divider />
-        <ReviewArea
-          reviews={reviews}
-          currentBookingMyAccepted={currentBookingMyAccepted}
-        />
-      </SubWrapper>
-
+      <ListingDetailBody
+        availability={availability}
+        title={title}
+        owner={owner}
+        address={address}
+        propertyType={propertyType}
+        numBathrooms={numBathrooms}
+        bedrooms={bedrooms}
+        amenities={amenities}
+        reviews={reviews}
+      />
       {/* Footer */}
       <ListingDetailFooter
         availability={availability}
         rating={calcRating(reviews)}
         numReviews={reviews.length}
-        price={dateRange ? diffDays(dateRange[0], dateRange[1]) * price : price}
+        price={totalPrice}
       />
     </Wrapper>
   );

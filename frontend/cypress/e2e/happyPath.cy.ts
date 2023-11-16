@@ -29,21 +29,21 @@ describe('user happy path', () => {
     cy.visit('localhost:3000/');
     cy.url().should('include', 'localhost:3000/');
   });
-  it.only('Registers successfully for ADMIN', () => {
+  it('Registers successfully for ADMIN', () => {
     cy.visit('localhost:3000/');
     performRegister('ADMIN');
     // assert
     cy.get('div[class="ant-message-notice-content"]').should('contain', 'Sign up successfully!');
     cy.url().should('include', 'localhost:3000/');
   });
-  it.only('Registers successfully for HOST', () => {
+  it('Registers successfully for HOST', () => {
     cy.visit('localhost:3000/');
     performRegister('HOST');
     // assert
     cy.get('div[class="ant-message-notice-content"]').should('contain', 'Sign up successfully!');
     cy.url().should('include', 'localhost:3000/');
   });
-  it.only('Create a new listing successfully', () => {
+  it('Create a new listing successfully', () => {
     cy.visit('localhost:3000/');
     performLogin('HOST');
     // create a new listing
@@ -51,7 +51,8 @@ describe('user happy path', () => {
     cy.get('a[href="/listing/hosted"]').click();
     cy.get('a[href="/listing/create"]').click();
     cy.get('input[id="title"]').type(randomStr());
-    cy.get('input[id="address"]').type(randomStr());
+    cy.get('input[id="city"]').type(randomStr());
+    cy.get('input[id="street"]').type(randomStr());
     // add 2 bathrooms
     cy.get('button').find('+').click().click();
     cy.get('input[id="bedrooms_0_type"]').click();
@@ -77,7 +78,7 @@ describe('user happy path', () => {
     cy.url().should('include', 'localhost:3000/listing/hosted');
     cy.get('div[class="ant-message-notice-content"]').should('contain', 'Listing created successfully!');
   });
-  it.only('Updates the thumbnail and title of the listing successfully', () => {
+  it('Updates the thumbnail and title of the listing successfully', () => {
     // login
     cy.visit('localhost:3000/');
     performLogin('HOST');
@@ -103,7 +104,7 @@ describe('user happy path', () => {
     cy.url().should('include', 'localhost:3000/listing/hosted');
     cy.get('div[class="ant-message-notice-content"]').should('contain', 'Listing updated successfully!');
   });
-  it.only('Publish a listing successfully', () => {
+  it('Publish a listing successfully', () => {
     cy.visit('localhost:3000/');
     // login
     performLogin('HOST');
@@ -126,7 +127,7 @@ describe('user happy path', () => {
     // assert
     cy.get('div[class="ant-message-notice-content"]').should('contain', 'Listing published');
   });
-  it.only('Make a booking successfully', () => {
+  it('Make a booking successfully', () => {
     cy.visit('localhost:3000/');
     // login
     performLogin('ADMIN');
@@ -145,7 +146,7 @@ describe('user happy path', () => {
     // assert
     cy.get('div[class="ant-message-notice-content"]').should('contain', 'Booking created successfully!');
   });
-  it.only('Unpublish a listing successfully', () => {
+  it('Unpublish a listing successfully', () => {
     cy.visit('localhost:3000/');
     // login
     performLogin('HOST');
@@ -160,7 +161,7 @@ describe('user happy path', () => {
     // assert
     cy.get('div[class="ant-message-notice-content"]').should('contain', 'Listing unpublished');
   });
-  it.only('Logs out of the application successfully', () => {
+  it('Logs out of the application successfully', () => {
     // login
     cy.visit('localhost:3000/');
     performLogin('ADMIN');
@@ -173,7 +174,7 @@ describe('user happy path', () => {
     cy.get('div[class="ant-message-notice-content"]').should('contain', 'Log out successfully!');
     cy.url().should('include', 'localhost:3000/');
   });
-  it.only('Logs back into the application successfully', () => {
+  it('Logs back into the application successfully', () => {
     // login
     cy.visit('localhost:3000/');
     performLogin('ADMIN');

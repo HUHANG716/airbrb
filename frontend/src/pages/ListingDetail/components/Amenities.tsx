@@ -14,7 +14,7 @@ const Amenities = ({ amenities }: Props) => {
       gap={'small'}
       vertical>
       <Title>What this place offers</Title>
-      {amenities.map((amenity) => (
+      {amenities?.map((amenity) => (
         <Tag key={nanoid()}>{amenity}</Tag>
       ))}
     </Flex>

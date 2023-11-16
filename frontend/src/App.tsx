@@ -6,7 +6,7 @@ import { UserProvider } from './context/UserContext/UserContext';
 import { GlobalComponentsProvider } from './context/GlobalComponentsContext/GlobalComponentsContext';
 import theme from './styles/AntdTheme';
 import { BookingProvider } from './context/BookingContext/BookingContext';
-import { HostedProvider } from './pages/Hosted/context/HostedContext';
+import { HostedProvider } from './context/HostedContext/HostedContext';
 
 const App = () => {
   return (

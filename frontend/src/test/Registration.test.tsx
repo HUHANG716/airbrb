@@ -34,7 +34,7 @@ describe('Registration component', () => {
     );
   });
 
-  it('renders registration form with all required fields', async () => {
+  it('renders registration form with all required fields', () => {
     expect(wrapper.find(Input).exists()).toBeTruthy();
     expect(wrapper.find('input[id="name"]').exists()).toBeTruthy();
     expect(wrapper.find('input[id="password"]').exists()).toBeTruthy();
@@ -51,9 +51,6 @@ describe('Registration component', () => {
     wrapper.find('input[id="confirmPassword"]').simulate('change', { target: { value: 'BBBBBBBBB' } });
     wrapper.find('form').simulate('submit');
 
-    // Check if the error message is displayed
-    // expect(wrapper.find('div[id="confirmPassword_help"]').exists()).toBeTruthy();
-
     await act(async () => {
       await Promise.resolve(wrapper);
     });
@@ -61,6 +58,7 @@ describe('Registration component', () => {
   });
 
   it('allows the user to register', async () => {
+    // mock the api call to succeed
     const mockSuccessResponse = { data: { token: 'fake-token' } };
     (apiReq.post as jest.Mock).mockResolvedValue(mockSuccessResponse);
 
@@ -70,13 +68,10 @@ describe('Registration component', () => {
     wrapper.find('input[id="confirmPassword"]').simulate('change', { target: { value: 'password' } });
     wrapper.find('form').simulate('submit');
 
-    // Assuming apiReq.post is a promise, you need to wait for it to resolve
     await act(async () => {
       await Promise.resolve(wrapper);
-      // // You may need to re-render the wrapper to update the component after the state changes
-      // wrapper.update();
     });
-
+    // should pass the validation and call the api
     expect(apiReq.post).toHaveBeenCalledWith('/user/auth/register', {
       email: 'test@example.com',
       name: 'Test User',
@@ -86,7 +81,8 @@ describe('Registration component', () => {
     // Check if the user is redirected to the home page
     expect(mockNavigate).toHaveBeenCalledWith('/');
   });
-  it('allows the user to register', async () => {
+  it('should not trigger success callback when api calling fails', async () => {
+    // mock the api call to fail
     (apiReq.post as jest.Mock).mockRejectedValue(new Error('some error'));
 
     wrapper.find('input[id="email"]').simulate('change', { target: { value: 'test@example.com' } });
@@ -103,7 +99,7 @@ describe('Registration component', () => {
       name: 'Test User',
       password: 'password',
     });
-    // // Check if the user is redirected to the home page
+    // should not redirect
     expect(mockNavigate).not.toHaveBeenCalledWith('/');
   });
 });

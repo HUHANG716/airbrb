@@ -6,21 +6,24 @@ import { useNavigate } from 'react-router-dom';
 import ListingForm from '../../components/ListingForm/ListingForm';
 import { useForm } from 'antd/es/form/Form';
 import { UploadFile } from 'antd';
+import { useHosted } from '../../context/HostedContext/HostedContext';
 
 const Hosting = () => {
   const { notify } = useGlobalComponents();
+  const { reloadHosted } = useHosted();
   const [form] = useForm<ListingCreateForm>();
   const nav2 = useNavigate();
 
   const handleFinish = async () => {
-    const { title, address, amenities, bedrooms, numBathrooms, price, propertyType, thumbs } = form.getFieldsValue();
+    const { title, city, street, amenities, bedrooms, numBathrooms, price, propertyType, thumbs } = form.getFieldsValue();
     const thumbUrls = thumbs.fileList.map((file: UploadFile) => file.thumbUrl as string);
     const requestBody: ListingCreateRequest = {
       title,
       thumbnail: thumbUrls[0] || '',
       price,
       address: {
-        address,
+        city,
+        street,
       },
       metadata: {
         propertyType,
@@ -35,6 +38,7 @@ const Hosting = () => {
       const res = await apiReq.post<NewListingResponse>('/listings/new', requestBody);
       notify.success('Listing created successfully!');
       console.log(res.data);
+      reloadHosted();
       nav2('/listing/hosted');
     } catch (err) {
       notify.error(err as string);

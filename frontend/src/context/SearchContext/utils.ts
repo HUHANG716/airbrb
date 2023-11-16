@@ -2,12 +2,12 @@ import { SORT_BY_RATING } from '../../constant/constant';
 import { Range } from '../../types/global';
 import { Listing } from '../../types/listing';
 import dayjs from '../../utils/dayjs';
-import { calcBedsNum, calcRating } from '../../utils/utils';
+import { calcBedsNum, calcRating, isDigit } from '../../utils/utils';
 import { RattingMethod } from './SearchContext';
 
 type FilterBeds = (listing: Listing[], beds: Range<number>, threshold: number) => Listing[];
 type FilterPrice = (listing: Listing[], price: Range<number>, threshold: number) => Listing[];
-type FilterTitle = (listing: Listing[], title: string) => Listing[];
+type FilterSearchContent = (listing: Listing[], SearchContent: string) => Listing[];
 type FilterDate = (listing: Listing[], date: Range<string>) => Listing[];
 const filterBeds: FilterBeds = (listing, beds, threshold) => {
   let [min, max] = beds;
@@ -26,9 +26,11 @@ const filterPrice: FilterPrice = (listing, price, threshold) => {
   });
 };
 
-const filterTitle: FilterTitle = (listing, title) => {
+const filterSearchContent: FilterSearchContent = (listing, content) => {
   return listing.filter((item) => {
-    return item.title.toLowerCase().includes(title.toLowerCase());
+    if (item.address.city.toLowerCase().includes(content.toLowerCase())) return true;
+    if (item.address.street.toLowerCase().includes(content.toLowerCase())) return true;
+    return false;
   });
 };
 
@@ -48,8 +50,12 @@ const sortByRating: SortByRating = (listing, sortBy) => {
   return listing.sort((a, b) => {
     const { reviews: reviewsA } = a;
     const { reviews: reviewsB } = b;
-    const ratingA = Number(calcRating(reviewsA));
-    const ratingB = Number(calcRating(reviewsB));
+    const ratingResA = calcRating(reviewsA);
+    const ratingResB = calcRating(reviewsB);
+    let ratingA = isDigit(ratingResA) ? ratingResA : 0;
+    let ratingB = isDigit(ratingResB) ? ratingResB : 0;
+    ratingA = Number(ratingA);
+    ratingB = Number(ratingB);
     if (sortBy === SORT_BY_RATING.HIGH_TO_LOW) {
       return ratingB - ratingA;
     }
@@ -62,7 +68,7 @@ const registerFilter = (listing: Listing[]) => {
     get: () => listing,
     filterBeds: (beds: Range<number>, threshold: number) => registerFilter(filterBeds(listing, beds, threshold)),
     filterPrice: (price: Range<number>, threshold: number) => registerFilter(filterPrice(listing, price, threshold)),
-    filterTitle: (title: string, condition?: unknown) => (condition ? registerFilter(filterTitle(listing, title)) : registerFilter(listing)),
+    filterSearchContent: (title: string, condition?: unknown) => (condition ? registerFilter(filterSearchContent(listing, title)) : registerFilter(listing)),
     filterDate: (date: Range<string>, condition?: unknown) => (condition ? registerFilter(filterDate(listing, date)) : registerFilter(listing)),
     sortByRating: (sortBy: RattingMethod) => registerFilter(sortByRating(listing, sortBy)),
   };

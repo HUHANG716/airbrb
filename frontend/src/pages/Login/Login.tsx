@@ -4,7 +4,6 @@ import { Button, Flex, Input, Card as _Card } from 'antd';
 import { AuthResponse, UserLoginForm } from '../../types/user';
 import { Link as _Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-
 import { useGlobalComponents } from '../../context/GlobalComponentsContext/GlobalComponentsContext';
 import apiReq from '../../utils/apiReq';
 import { useUser } from '../../context/UserContext/UserContext';
@@ -16,7 +15,10 @@ const Link = styled(_Link)`
 `;
 
 const Card = styled(_Card)`
-  ${sm`width: 350px;`}
+  margin-top: 10vh;
+  width: 100%;
+  max-width: 500px;
+  ${sm`max-width: 380px;`}
 `;
 const Login = () => {
   const [form] = Form.useForm<UserLoginForm>();
@@ -73,7 +75,7 @@ const Login = () => {
                   message: 'Please input your password!',
                 },
               ]}>
-              <Input />
+              <Input.Password />
             </FormItem>
             <Button
               htmlType='submit'

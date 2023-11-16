@@ -3,7 +3,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, InputNumber, Select } from 'antd';
 import styled from 'styled-components';
 import { BEDROOM_TYPES } from '../../../constant/constant';
-import { FullWidthItem } from '../../../components/ListingForm/ListingForm';
+import { FullWidthItem } from '../ListingForm';
 import { handleEnter } from '../../../utils/utils';
 
 const InputNum = styled(InputNumber)`
@@ -29,7 +29,6 @@ const BedroomAdding = () => {
 
   return (
     <FullWidthItem label='Bedrooms'>
-      + Add Bedroom
       <List name='bedrooms'>
         {(subFields, subOpt) => (
           <Flex
@@ -54,7 +53,7 @@ const BedroomAdding = () => {
                       style={{
                         width: '8rem',
                       }}
-                      placeholder='Bed Type'>
+                      placeholder='Type'>
                       {Options}
                     </Select>
                   </FormItem>

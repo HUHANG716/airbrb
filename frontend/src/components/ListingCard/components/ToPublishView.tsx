@@ -1,7 +1,7 @@
 import { Button, DatePicker, Flex } from 'antd';
 
 import React, { useState } from 'react';
-import { useHosted } from '../../../pages/Hosted/context/HostedContext';
+import { useHosted } from '../../../context/HostedContext/HostedContext';
 import { useGlobalComponents } from '../../../context/GlobalComponentsContext/GlobalComponentsContext';
 import { Availability } from '../../../types/listing';
 

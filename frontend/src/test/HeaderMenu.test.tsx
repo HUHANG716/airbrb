@@ -2,7 +2,7 @@ import React from 'react';
 import { ShallowWrapper, shallow } from 'enzyme';
 import HeaderMenu from '../components/Layout/components/HeaderMenu';
 import { useUser } from '../context/UserContext/UserContext';
-import { Dropdown, MenuProps } from 'antd';
+import { Dropdown } from 'antd';
 import { ItemType } from 'antd/es/menu/hooks/useItems';
 
 type Mock = jest.Mock;
@@ -29,9 +29,7 @@ const getMenuShallowWrapper = (wrapper: ShallowWrapper) => {
   return MenuWrapper;
 };
 describe('HeaderMenu', () => {
-  it('should show login and signup options when no user is logged in', async () => {
-    // Render the HeaderMenu component within the UserContextProvider
-    // without a logged-in user.
+  it('should show login and sign-up options when not logged in', () => {
     (useUser as Mock).mockReturnValue({
       userInfo: null,
       login: jest.fn(),
@@ -40,12 +38,11 @@ describe('HeaderMenu', () => {
 
     const wrapper = shallow(<HeaderMenu />);
     const Menu = getMenuShallowWrapper(wrapper);
-
     expect(Menu.find('Link[to="login"]').exists()).toBe(true);
     expect(Menu.find('Link[to="register"]').exists()).toBe(true);
   });
 
-  it('should show manage listings and logout options when user is logged in', () => {
+  it('should show manage listings and logout options when logged in', () => {
     // Render the HeaderMenu component within the UserContextProvider
     // with a logged-in user.
     (useUser as Mock).mockReturnValue({

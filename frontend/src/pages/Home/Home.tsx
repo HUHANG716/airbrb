@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { useHosted } from '../Hosted/context/HostedContext';
+import { useHosted } from '../../context/HostedContext/HostedContext';
 
-import { Col, Flex, Row } from 'antd';
+import { Col, Flex, Row, Typography } from 'antd';
 import ListingCard from '../../components/ListingCard/ListingCard';
 import styled from 'styled-components';
 import { flexCenter, fullWH } from '../../styles/FlexStyle';
@@ -18,6 +18,7 @@ import { IoPricetagOutline } from 'react-icons/io5';
 import { TbArrowsSort } from 'react-icons/tb';
 import { BiBed } from 'react-icons/bi';
 import { AiOutlineCalendar } from 'react-icons/ai';
+import { nanoid } from 'nanoid';
 
 const Home = () => {
   return <HomeContent />;
@@ -59,11 +60,11 @@ const sortForBookingFirst = (listings: Listing[], bookingsMy: Booking[]) => {
 
 const HomeContent = () => {
   const { listingsPublished } = useHosted();
-  const [listings, setListings] = useState(listingsPublished);
   const { signalForFilter, doFilter, resetSearchParams, searchParams } = useSearch();
-  const { sortByRating, numBedroomsRange, priceRange, dateRange } = searchParams;
+  const [listings, setListings] = useState(listingsPublished);
   const { bookingsMy } = useBooking();
   const nav2 = useNavigate();
+  const { sortByRating, numBedroomsRange, priceRange, dateRange } = searchParams;
   const bookingFirstListing = useMemo(() => sortForBookingFirst(listingsPublished, bookingsMy), [listingsPublished, bookingsMy]);
   const { sortMethod, price, beds, date } = useMemo(() => {
     return {
@@ -73,38 +74,50 @@ const HomeContent = () => {
       date: isDateEmpty(dateRange) ? 'All' : `${dateRange[0]} - ${dateRange[1]}`,
     };
   }, [signalForFilter]);
-  useEffect(() => {
-    setListings(bookingFirstListing);
-  }, [bookingFirstListing]);
 
-  useEffect(() => {
-    doFilter(bookingFirstListing, (res) => setListings(res));
-  }, [signalForFilter]);
+  useEffect(() => setListings(bookingFirstListing), [bookingFirstListing]);
+
+  useEffect(() => doFilter(bookingFirstListing, (res) => setListings(res)), [signalForFilter]);
   // reset search params when unmount
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       resetSearchParams();
-    };
-  }, []);
+    },
+    []
+  );
+
+  const filterTags = [
+    {
+      icon: <TbArrowsSort />,
+      text: sortMethod,
+    },
+    {
+      icon: <IoPricetagOutline />,
+      text: price,
+    },
+    {
+      icon: <BiBed />,
+      text: beds,
+    },
+    {
+      icon: <AiOutlineCalendar />,
+      text: date,
+    },
+  ];
   return (
     <CommonContentWrapper vertical>
       {/* Top */}
       <FilterParamsWrapper
         gap={'small'}
         justify='center'>
-        <Tag>
-          <TbArrowsSort /> {sortMethod}
-        </Tag>
-        <Tag>
-          <IoPricetagOutline /> {price}
-        </Tag>
-        <Tag>
-          <BiBed />
-          {beds}
-        </Tag>
-        <Tag>
-          <AiOutlineCalendar /> {date}
-        </Tag>
+        {filterTags.map(({ icon, text }) => (
+          <Tag
+            type='info'
+            key={nanoid()}>
+            {icon}
+            {text}
+          </Tag>
+        ))}
       </FilterParamsWrapper>
       {/* Body */}
       <Grid gutter={[16, 16]}>
@@ -128,6 +141,7 @@ const HomeContent = () => {
           </GridItem>
         ))}
       </Grid>
+      {listingsPublished.length === 0 && <Typography.Title>No Published Listing Right Now...</Typography.Title>}
     </CommonContentWrapper>
   );
 };

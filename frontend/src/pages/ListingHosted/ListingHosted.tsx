@@ -3,7 +3,7 @@ import { useUser } from '../../context/UserContext/UserContext';
 import { Button, Flex, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import HostedBody from '../Hosted/components/HostedBody';
+import HostedBody from './components/HostedBody';
 import { CommonContentWrapper } from '../../styles/GlobalStyle';
 
 const { Title } = Typography;

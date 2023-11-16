@@ -1,15 +1,16 @@
-import { BEDROOM_TYPE, PLACE_TYPES } from '../constant/constant';
-import { Id, Img } from './global';
+import { BEDROOM_TYPES, PLACE_TYPES } from '../constant/constant';
+import { Id, Img, Range } from './global';
 import { UploadChangeParam } from 'antd/es/upload';
 
 interface Address {
-  address: string;
+  city: string;
+  street: string;
 }
 interface Availability {
   start: string;
   end: string;
 }
-type BedroomType = (typeof BEDROOM_TYPE)[number];
+type BedroomType = (typeof BEDROOM_TYPES)[number];
 type PlaceType = (typeof PLACE_TYPES)[number];
 type Viewer = 'owner' | 'common';
 interface Bedroom {
@@ -45,9 +46,8 @@ interface Listing {
     nights: number;
   };
 }
-interface ListingCreateForm extends Omit<Metadata, 'otherPictures'> {
+interface ListingCreateForm extends Omit<Metadata, 'otherPictures'>, Address {
   title: string;
-  address: string;
   price: number;
   thumbs: UploadChangeParam;
 }

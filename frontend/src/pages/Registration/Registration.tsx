@@ -1,4 +1,4 @@
-import { Form as _Form, Input, Flex, Button, Card as _Card } from 'antd';
+import { Form as _Form, Card as _Card } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { AuthResponse, UserRegisterForm } from '../../types/user';
@@ -13,8 +13,10 @@ export const Form = styled(_Form)`
   width: 100%;
 `;
 const Card = styled(_Card)`
-  width: 400px;
-  ${sm`width: 350px;`}
+  margin-top: 5vh;
+  width: 100%;
+  max-width: 500px;
+  ${sm`max-width: 380px;`}
 `;
 
 const Registration = () => {

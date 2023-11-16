@@ -40,7 +40,15 @@ export const CommonContentWrapper = styled(Flex)`
   align-items: center;
   padding: 4rem;
 `;
-export const ResponsiveText = styled.span`
+
+export const ResponsiveText = styled(Typography.Text)`
+  width: 100%;
+  ${sm`
+    font-size: 0.75rem;
+ `}
+`;
+export const ResponsiveTextPure = styled.div`
+  height: 100%;
   ${sm`
     font-size: 0.75rem;
  `}
@@ -51,6 +59,13 @@ export const ResponsiveTitle = styled(Typography.Title)`
  `}
 `;
 
-// sm: 768px ,xs: 576px,xs: 375px
+export const EllipsisText = styled(ResponsiveText)`
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
+export const StrongEllipsisText = styled(EllipsisText)`
+  font-weight: 00;
+`;
 
 export default GlobalStyle;

@@ -2,11 +2,9 @@ import React, { useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useBooking } from '../../context/BookingContext/BookingContext';
 import { Button, Card, Collapse, Flex, Space } from 'antd';
-import { useHosted } from '../Hosted/context/HostedContext';
-
+import { useHosted } from '../../context/HostedContext/HostedContext';
 import { diffDays, nItem } from '../../utils/utils';
 import styled from 'styled-components';
-
 import dayjs, { defaultDayjs } from '../../utils/dayjs';
 import { BOOKING_STATUS } from '../../constant/constant';
 import { Id } from '../../types/global';
@@ -35,13 +33,9 @@ const ListingBookingDetail = () => {
   const { postedOn, published } = getOneListing(id) || {
     postedOn: undefined,
   };
-
   const bookings = getBookingsOfListing(id);
-
   const duration = useMemo(() => published && postedOn && defaultDayjs().diff(defaultDayjs(postedOn), 'day') + 1, [postedOn, published]);
   const currentYear = defaultDayjs().get('year');
-  console.log(duration);
-
   const { profit, totalDays } = bookings.reduce(
     (total, { dateRange, status, totalPrice }) => {
       const { start, end } = dateRange;

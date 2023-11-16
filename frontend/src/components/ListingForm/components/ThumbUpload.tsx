@@ -2,7 +2,7 @@ import { Divider, Flex, FormInstance, Upload } from 'antd';
 import React from 'react';
 
 import { PlusOutlined } from '@ant-design/icons';
-import { FullWidthItem } from '../../../components/ListingForm/ListingForm';
+import { FullWidthItem } from '../ListingForm';
 import { UploadChangeParam, UploadFile } from 'antd/es/upload';
 import { getBase64 } from '../../../utils/utils';
 import { nanoid } from 'nanoid';
