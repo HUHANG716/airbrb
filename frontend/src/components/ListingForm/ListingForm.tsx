@@ -1,13 +1,11 @@
-import { Button, Divider, Form as _Form, Input, Radio, Select, FormInstance, Flex } from 'antd';
+import { Button, Divider, Form as _Form, Input, Radio, Select, FormInstance } from 'antd';
 import React from 'react';
 import { PLACE_TYPES } from '../../constant/constant';
 import BathroomAdding from './components/BathroomAdding';
 import BedroomAdding from './components/BedroomAdding';
 import ThumbUpload from './components/ThumbUpload';
-
 import { ListingCreateForm } from '../../types/listing';
 import styled from 'styled-components';
-
 import { CommonContentWrapper } from '../../styles/GlobalStyle';
 import AddressInput from './components/AddressInput';
 const { useWatch } = _Form;
@@ -43,10 +41,6 @@ const ListingForm = ({ form, handleFinish }: Props) => {
         }}
         scrollToFirstError
         onFinish={handleFinish}
-        onSubmitCapture={(e) => {
-          console.log(form.getFieldsValue());
-          e.preventDefault();
-        }}
         form={form}
         layout='vertical'>
         <FullWidthItem

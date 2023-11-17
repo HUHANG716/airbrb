@@ -39,8 +39,6 @@ const ToUnpublishView = ({ availability, closePopover }: Props) => {
       gap={'middle'}
       align='center'>
       {availability?.map(({ start, end }) => {
-        console.log(start, end);
-
         return (
           <Item key={nanoid()}>
             {start} - {end}

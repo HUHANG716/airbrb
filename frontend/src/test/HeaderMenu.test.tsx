@@ -22,10 +22,15 @@ const getMenuShallowWrapper = (wrapper: ShallowWrapper) => {
   const { items } = dropdown.props().menu as {
     items: (ItemType & { label: React.ReactNode })[];
   };
-  console.log(items);
 
   const itemsNode = items.map((item: { label: React.ReactNode }) => item?.label);
-  const MenuWrapper = shallow(<div>{itemsNode.map((node: React.ReactNode) => node)}</div>);
+  const MenuWrapper = shallow(
+    <div>
+      {itemsNode.map((node: React.ReactNode, index) => (
+        <div key={`node-${index}`}>{node}</div>
+      ))}
+    </div>
+  );
   return MenuWrapper;
 };
 describe('HeaderMenu', () => {

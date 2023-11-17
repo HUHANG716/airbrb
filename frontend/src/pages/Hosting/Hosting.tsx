@@ -37,7 +37,7 @@ const Hosting = () => {
     try {
       const res = await apiReq.post<NewListingResponse>('/listings/new', requestBody);
       notify.success('Listing created successfully!');
-      console.log(res.data);
+
       reloadHosted();
       nav2('/listing/hosted');
     } catch (err) {

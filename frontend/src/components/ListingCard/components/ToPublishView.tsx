@@ -1,12 +1,9 @@
 import { Button, DatePicker, Flex } from 'antd';
-
 import React, { useState } from 'react';
 import { useHosted } from '../../../context/HostedContext/HostedContext';
 import { useGlobalComponents } from '../../../context/GlobalComponentsContext/GlobalComponentsContext';
 import { Availability } from '../../../types/listing';
-
 import apiReq from '../../../utils/apiReq';
-
 import styled from 'styled-components';
 import { useListingCard } from '../ListingCard';
 import { nanoid } from 'nanoid';
@@ -46,8 +43,6 @@ const ToPublishView = () => {
   };
 
   const handleSubmit = async (dates: Availability[]) => {
-    console.log(dates);
-
     try {
       await apiReq.put(`/listings/publish/${id}`, {
         availability: dates,

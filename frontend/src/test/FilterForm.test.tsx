@@ -2,7 +2,6 @@ import React from 'react';
 import { ShallowWrapper, shallow } from 'enzyme';
 import { DatePicker, Select, Slider } from 'antd';
 import FilterForm from '../components/Layout/components/FilterForm';
-
 import { Range } from '../types/global';
 import dayjs from '../utils/dayjs';
 import { SearchParams } from '../context/SearchContext/SearchContext';

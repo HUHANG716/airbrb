@@ -1,5 +1,4 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-
 import { Listing, ListingSlim } from '../../types/listing';
 import { useGlobalComponents } from '../GlobalComponentsContext/GlobalComponentsContext';
 import apiReq from '../../utils/apiReq';
@@ -42,12 +41,8 @@ const HostedProvider = ({ children }: { children: React.ReactNode }) => {
   const [listingsPublished, setListingsPublished] = useState<Listing[]>([]);
   const getListingsThin = async (): Promise<ListingSlim[]> => {
     let res: ListingSlim[] = [];
-    try {
-      const response = await apiReq.get<{ listings: ListingSlim[] }>('/listings');
-      res = response.data.listings;
-    } catch (err) {
-      notify.error(err as string);
-    }
+    const response = await apiReq.get<{ listings: ListingSlim[] }>('/listings');
+    res = response.data.listings;
     return res;
   };
 

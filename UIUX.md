@@ -1,4 +1,4 @@
 - clean UI, easy to navigate and understand
-- dark theme for health of eyes
+- dark theme
 - effective interaction to get needed information
-- ![Alt text](image.png)
+- ![Navigator](image.png)

@@ -66,8 +66,7 @@ const BedroomAdding = () => {
                       }),
                     ]}
                     name={[subField.name, 'num']}
-                    required
-                    initialValue={0}>
+                    required>
                     <InputNum placeholder='Beds' />
                   </FormItem>
                   <FormItem>

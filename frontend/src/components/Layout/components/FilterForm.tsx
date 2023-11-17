@@ -1,5 +1,5 @@
 import React from 'react';
-import { Slider, DatePicker, Select, Flex, Space } from 'antd';
+import { Slider, DatePicker, Select, Flex } from 'antd';
 import { BED_THRESHOLD, SearchParams } from '../../../context/SearchContext/SearchContext';
 import { SORT_BY_RATING } from '../../../constant/constant';
 import { Range } from '../../../types/global';
@@ -54,8 +54,9 @@ const FilterForm = ({ searchParams, setSearchParams }: { searchParams: SearchPar
         step={100}
       />
       Date Range
-      <Space>
+      <Flex>
         <DatePicker
+          style={{ width: '100%' }}
           value={start as Dayjs}
           onChange={(_, value) => {
             setSearchParams({
@@ -66,6 +67,7 @@ const FilterForm = ({ searchParams, setSearchParams }: { searchParams: SearchPar
           format={'DD/MM/YYYY'}
         />
         <DatePicker
+          style={{ width: '100%' }}
           value={end as Dayjs}
           onChange={(_, value) => {
             setSearchParams({
@@ -75,7 +77,7 @@ const FilterForm = ({ searchParams, setSearchParams }: { searchParams: SearchPar
           }}
           format={'DD/MM/YYYY'}
         />
-      </Space>
+      </Flex>
       Rank By Rating From
       <Select
         onChange={(value) =>

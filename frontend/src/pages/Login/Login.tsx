@@ -35,7 +35,6 @@ const Login = () => {
         email,
         token,
       });
-      console.log(123);
 
       notify.success('Log in successfully!');
       nav2('/');

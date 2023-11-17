@@ -63,14 +63,10 @@ describe('user happy path', () => {
     cy.get('#amenities').focus().type('Pool').type('{enter}');
 
     // upload
-    cy.get('input[type="file"]').selectFile('./test.jpg', {
+    cy.get('input[type="file"]').selectFile('cypress/assets/test.jpg', {
       force: true,
     });
     cy.wait(1000);
-    // cy.get('input[type="file"]').selectFile('./test.jpg', {
-    //   force: true,
-    // });
-    // cy.wait(1000);
     cy.get('input[id="price"]').type('100');
     cy.get('button[type="submit"]').click();
     cy.wait(5000);
@@ -94,7 +90,7 @@ describe('user happy path', () => {
     // update the image/thumbnail
     cy.get('button[title="Remove file"]').first().click();
     // cy.get('button[title="Remove file"]').first().click();
-    cy.get('input[type="file"]').selectFile('./test2.webp', {
+    cy.get('input[type="file"]').selectFile('cypress/assets/test2.webp', {
       force: true,
     });
     cy.wait(1000);

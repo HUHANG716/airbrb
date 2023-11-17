@@ -9,11 +9,7 @@ import { nanoid } from 'nanoid';
 
 const ThumbUpload = ({ thumbFiles, form }: { thumbFiles?: UploadChangeParam; form: FormInstance }) => {
   const handleUpload = (file: File) => {
-    console.log(file);
-
     getBase64(file as File).then((res) => {
-      console.log(form.getFieldValue('thumbs')?.fileList);
-
       form.setFieldsValue({
         thumbs: {
           fileList: [

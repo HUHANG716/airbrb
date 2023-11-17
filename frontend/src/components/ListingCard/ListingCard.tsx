@@ -37,7 +37,7 @@ type Props = {
   className?: string;
   viewer?: Viewer;
   coverStyle?: React.CSSProperties;
-  onClick?: () => void;
+  onClick: () => void;
 };
 
 type ListingCardContextType = ReturnType<typeof processListing> & {
@@ -99,7 +99,7 @@ const ListingCard = ({ listing, className = '', viewer = 'common', coverStyle, o
             title='Click to view details'
             tabIndex={0}
             onKeyDown={(e) => {
-              e.key === 'Enter' && onClick && onClick();
+              e.key === 'Enter' && onClick();
             }}
             style={coverStyle}
             onClick={onClick}
@@ -121,7 +121,6 @@ const ListingCard = ({ listing, className = '', viewer = 'common', coverStyle, o
             <Typography.Text strong>{priceRenderStr}</Typography.Text>
             {nights && <Tag>{nights + ' night'}</Tag>}
           </Space>
-
           <ListingCardBottom />
         </Flex>
       </Card>

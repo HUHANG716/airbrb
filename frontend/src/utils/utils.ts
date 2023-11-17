@@ -75,7 +75,7 @@ const nItem = (n: number, item: string) => {
 };
 const isDateEmpty = (date: Range<string>) => {
   const [min, max] = date;
-  return min === '' && max === '';
+  return min === '' || max === '';
 };
 const handleEnter = (e: React.KeyboardEvent<HTMLElement>, fn: () => void) => {
   e.key === 'Enter' && fn();

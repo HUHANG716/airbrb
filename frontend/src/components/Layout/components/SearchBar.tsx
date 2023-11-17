@@ -28,6 +28,8 @@ const SearchBar = () => {
   };
   const handleOk = () => {
     const { dateRange } = searchParams;
+    console.log(dateRange);
+
     const [exist, after] = [!isDateEmpty(dateRange), dayjs(dateRange[0]).isAfter(dayjs(dateRange[1]), 'day')];
     if (exist && after) {
       notify.error('Start date should be before end date');
