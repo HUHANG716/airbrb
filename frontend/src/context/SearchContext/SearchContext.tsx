@@ -1,8 +1,6 @@
-/* disable-eslint */
 import React, { createContext, useContext, useState } from 'react';
 import { Range } from '../../types/global';
 import { SORT_BY_RATING } from '../../constant/constant';
-
 import { Listing } from '../../types/listing';
 import { registerFilter } from './utils';
 import { isDateEmpty } from '../../utils/utils';

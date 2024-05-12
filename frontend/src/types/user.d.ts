@@ -1,5 +1,3 @@
-/** @format */
-
 interface UserInfo {
   token: string;
   email: string;

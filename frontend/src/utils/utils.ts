@@ -7,7 +7,6 @@ const lsSave = (key: string, target: unknown) => {
 };
 const lsGet = (key: string) => {
   const item = localStorage.getItem(key);
-
   return item ? JSON.parse(item) : null;
 };
 const lsRm = (key: string) => {
